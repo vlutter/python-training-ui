@@ -1,0 +1,31 @@
+@use '../../shared/assets/styles/colors.scss';
+
+.navbar {
+    justify-content: space-between;
+    align-items: center;
+    background-color: colors.$purple;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    &__logo {
+        height: 50px;
+    }
+
+    &__divider {
+        height: calc(100% - 20px);
+        width: 0;
+        border-left: 2px solid white;
+        margin-block: 10px;
+        margin-inline: 8px;
+    }
+
+    &__title {
+        color: white;
+        line-height: 24px;
+        font-weight: 400;
+    }
+}

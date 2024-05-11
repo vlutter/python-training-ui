@@ -1,0 +1,24 @@
+@use '../../shared/assets/styles/colors.scss';
+
+.main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    &__body {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+    }
+
+    &__menu {
+        width: 320px;
+        height: 100%;
+        border-right: 1px solid colors.$gray;
+    }
+
+    &__content {
+        flex: 1;
+        height: 100%;
+    }
+}

@@ -1,0 +1,21 @@
+<div class="tasks-menu">
+    <mat-accordion class="tasks-menu__accordion" displayMode="flat" multi>
+        @for (group of taskGroups; track group.id) {
+            <mat-expansion-panel class="tasks-menu__panel" hideToggle (expandedChange)="_onExpandedChange($event, group)">
+                <mat-expansion-panel-header>
+                    <div class="tasks-menu__group">
+                        <mat-icon class="tasks-menu__chevron" [class._expanded]="expandedGroupIds.includes(group.id)" aria-hidden="false" aria-label="Chevron" fontIcon="chevron_right"></mat-icon>
+
+                        {{group.name}}
+                    </div>
+                </mat-expansion-panel-header>
+          
+                <mat-nav-list class="tasks-menu__list">
+                  @for (task of group.tasks; track task.id) {
+                    <a class="tasks-menu__item" mat-list-item href="/">{{ task.name }}</a>
+                  }
+                </mat-nav-list>
+            </mat-expansion-panel>
+        }
+    </mat-accordion>
+</div>

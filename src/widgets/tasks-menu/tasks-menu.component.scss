@@ -1,0 +1,45 @@
+.tasks-menu {
+    --mat-expansion-header-expanded-state-height: 48px;
+    // --mat-expansion-header-collapsed-state-height: 48px;
+    --mdc-list-list-item-label-text-size: 14px;
+    --mdc-list-list-item-one-line-container-height: 36px;
+
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 12px;
+
+    &__title {
+        height: 24px;
+    }
+
+    &__panel {
+        box-shadow: none !important;
+
+        .mat-expansion-panel-header {
+            padding: 0 24px 0 12px;
+        }
+    }
+
+    &__list {
+        padding: 0;
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    &__chevron {
+        transform: rotate(0);
+        transition: transform 0.25s;
+
+        &._expanded {
+            transform: rotate(90deg);
+        }
+    }
+
+    .mat-expansion-indicator {
+        height: 24px !important;
+    }
+}

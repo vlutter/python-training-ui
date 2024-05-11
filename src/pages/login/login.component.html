@@ -1,0 +1,76 @@
+<div class="login">
+    <mat-card class="login__card">
+        <mat-card-content>
+            <div class="login__header">
+                <img src="../../shared/assets/logo.svg" alt="Main Logo">
+    
+                <div class="login__divider"></div>
+        
+                <span class="login__title">Python Тренинг</span>
+    
+                <div class="login__divider"></div>
+        
+                <span class="login__title">{{isRegister ? 'Регистрация' : 'Авторизация'}}</span>
+            </div>
+
+            <div class="login__content">
+                <div class="login__error-message">{{errorMessage}}</div>
+
+                @if (!isRegister) {
+                    <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+                        <mat-form-field class="login__input" appearance="fill">
+                            <mat-label>Email</mat-label>
+
+                            <input matInput formControlName="email" type="email" placeholder="Введите ваш email" required>
+                            <mat-error>Пожалуйста, введите валидную почту</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="login__input" appearance="fill">
+                            <mat-label>Пароль</mat-label>
+
+                            <input matInput formControlName="password" type="password" placeholder="Введите ваш пароль" required>
+                            <mat-error>Это поле должно быть заполнено</mat-error>
+                        </mat-form-field>
+    
+                        <div class="login__footer">
+                            <button type="submit" mat-raised-button color="primary">Войти</button>
+    
+                            <button type="button" mat-button color="secondary" (click)="register()">Регистрация</button>
+                        </div>
+                    </form>
+                }
+
+                @if (isRegister) {
+                    <form class="login__form" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+                        <mat-form-field class="login__input" appearance="fill">
+                            <mat-label>Email</mat-label>
+
+                            <input matInput formControlName="email" type="email" placeholder="Введите ваш email" required>
+                            <mat-error>Пожалуйста, введите валидную почту</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="login__input" appearance="fill">
+                            <mat-label>ФИО</mat-label>
+
+                            <input matInput formControlName="name" placeholder="Введите ваши ФИО" required>
+                            <mat-error>Это поле должно быть заполнено</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="login__input" appearance="fill">
+                            <mat-label>Пароль</mat-label>
+
+                            <input matInput formControlName="password" type="password" placeholder="Введите ваш пароль" required>
+                            <mat-error>Это поле должно быть заполнено</mat-error>
+                        </mat-form-field>
+    
+                        <div class="login__footer">
+                            <button type="submit" mat-raised-button color="primary">Зарегистрироваться</button>
+    
+                            <button type="button" mat-button color="secondary" (click)="login()">Авторизоваться</button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

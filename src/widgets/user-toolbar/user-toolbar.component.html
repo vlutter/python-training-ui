@@ -1,0 +1,19 @@
+@if (userInfo) {
+    <div class="user-toolbar" [matMenuTriggerFor]="menu">
+        <div class="user-toolbar__info">
+            <div class="user-toolbar__name">{{userInfo.name}}</div>
+            
+            <div class="user-toolbar__email">{{userInfo.email}}</div>
+        </div>
+
+        <gravatar [email]="userInfo.email"></gravatar>
+    </div>
+
+    <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="logout()">Выйти из аккаунта</button>
+    </mat-menu>
+}
+
+@if (!userInfo) {
+    <button mat-raised-button (click)="logout()">Выйти из аккаунта</button>
+}

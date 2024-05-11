@@ -1,0 +1,25 @@
+.user-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    &__name {
+        color: white;
+        font-size: 15px;
+        line-height: 24px;
+    }
+
+    &__email {
+        color: white;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 300;
+    }
+}
