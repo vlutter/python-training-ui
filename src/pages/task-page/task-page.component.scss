@@ -1,0 +1,64 @@
+@use '../../shared/assets/styles/colors.scss';
+
+.task-page {
+    height: 100%;
+    overflow: auto;
+    padding: 12px 20px;
+
+    font-size: 16px;
+
+    &__inner {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+
+        &._code {
+            background-color: colors.$gray;
+        }
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    &__divider {
+        border-bottom: 2px solid colors.$gray;
+        margin: 24px 0;
+    }
+}
+
+.task-code {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    &__editor {
+        height: 400px;
+        padding: 10px 0;
+        border-radius: var(--tui-radius-m);
+        border: 1px solid colors.$border;
+        box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    &__toolbar {
+        margin-top: 12px;
+    }
+
+    &__output {
+        white-space: break-spaces;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+}

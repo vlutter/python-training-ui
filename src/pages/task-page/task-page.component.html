@@ -1,0 +1,95 @@
+<div class="task-page">
+    <div class="task-page__inner">
+        <h2>Раздел: {{taskGroup?.name}}</h2>
+
+        <h1 class="task-page__title">
+            Задача: {{task?.name}}
+
+            @if (task) {
+                <button
+                    icon="tuiIconEdit"
+                    appearance="flat"
+                    tuiIconButton
+                    type="button"
+                    size="s"
+                    (click)="_editTask(task.id)"
+                >
+                    flat
+                </button>
+            }
+        </h1>
+
+        <div [innerHtml]="descriptionHtml"></div>
+
+        <div class="task-page__divider"></div>
+
+        <h2>Решение:</h2>
+
+        <div class="task-page__code task-code">
+            <div class="task-code__editor">
+                <div style="height: 100%">
+                    <ngs-code-editor
+                        style="height: 100%"
+                        [theme]="theme"
+                        [codeModel]="model"
+                        [options]="options"
+                        (valueChanged)="_onCodeChanged($event)"
+                    ></ngs-code-editor>
+                </div>
+            </div>
+
+            <div>
+                <div class="task-code__title">Входные данные:</div>
+
+                <form [formGroup]="dataForm">
+                    <tui-textarea [expandable]="true" formControlName="inputData">
+                        Type a text
+                    </tui-textarea>
+                </form>
+            </div>
+
+            @if (result || error) {
+                <div>
+                    <div class="task-code__title">Результат:</div>
+    
+                    @if (result !== undefined) {
+                        <tui-notification [status]="solved ? 'success' : 'info'" size="m">
+                            <div class="task-code__output">
+                                {{result}}
+                            </div>
+                        </tui-notification>
+                    } @else {
+                        <tui-notification status="error" icon="" size="m">
+                            <div class="task-code__output">
+                                {{error}}
+                            </div>
+                        </tui-notification>
+                    }
+                </div>
+            }
+
+            <div class="task-code__buttons">
+                <tui-loader
+                    [inheritColor]="true"
+                    [overlay]="true"
+                    [showLoader]="runLoading"
+                >
+                    <button tuiButton appearance="secondary" size="m" (click)="_runCode()">
+                        Запустить код
+                    </button>
+                </tui-loader>
+
+                <tui-loader
+                    [inheritColor]="true"
+                    [overlay]="true"
+                    [showLoader]="testLoading"
+                >
+                    <button tuiButton size="m" (click)="_testCode()">
+                        Отправить решение
+                    </button>
+                </tui-loader>
+            </div>
+        </div>
+        
+    </div>
+</div>

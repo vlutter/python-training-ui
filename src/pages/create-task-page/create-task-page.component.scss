@@ -1,0 +1,95 @@
+@use '../../shared/assets/styles/colors.scss';
+
+.create-task-page {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: 16px;
+
+    &__content {
+        flex: 1;
+
+        overflow: auto;
+    }
+}
+
+.create-task-content{
+    width: 100%;
+
+    &__inner {
+        flex: 1;
+        width: calc(100% - 40px);
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    &__control {
+        & + & {
+            margin-top: 12px;
+        }
+    }
+}
+
+.create-task-footer {
+    height: 70px;
+    width: 100%;
+    padding: 0 20px;
+
+    border-top: 1px solid colors.$border;
+    box-shadow: 0 .125rem 1rem rgba(0, 0, 0, .08);
+
+    &__inner {
+        height: 100%;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        display: flex;
+        align-items: center;
+    }
+}
+
+.create-task-tests {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+
+    h3 {
+        margin-bottom: 0;
+    }
+
+    &__row {
+        display: flex;
+        gap: 8px;
+    }
+
+    &__input {
+        width: 250px;
+        min-height: 62px;
+    }
+
+    &__add {
+        align-self: flex-start;
+    }
+}
+
+.editor {
+    --ngx-editor-border-color: transparent;
+
+    border-radius: var(--tui-radius-m);
+    border: 1px solid colors.$border;
+    box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    &__divider {
+        border-top: 1px solid colors.$border;
+    }
+}

@@ -1,15 +1,29 @@
 import { Component } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { TaskGroup } from '@models/task.model';
+import { TaskBrief, TaskGroup } from '@models/task.model';
 import { TasksService } from '@services/tasks.service';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { GroupCreatorComponent } from '@widgets/group-creator/group-creator.component';
+import { TuiButtonModule, TuiDataListModule, TuiDropdownModule, TuiExpandModule, TuiHostedDropdownModule, TuiLoaderModule, TuiSvgModule } from '@taiga-ui/core';
+import { tap } from 'rxjs';
 
 
 @Component({
   selector: 'tasks-menu',
   standalone: true,
-  imports: [MatExpansionModule, MatListModule, MatIconModule],
+  imports: [
+    TuiButtonModule,
+    TuiExpandModule,
+    TuiDataListModule,
+    TuiSvgModule,
+    TuiDropdownModule,
+    TuiHostedDropdownModule,
+    TuiLoaderModule,
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    GroupCreatorComponent
+  ],
   templateUrl: './tasks-menu.component.html',
   styleUrl: './tasks-menu.component.scss'
 })
@@ -20,17 +34,22 @@ export class TasksMenuComponent {
   }));
 
   public taskGroups: TaskGroup[] = [];
-
   public expandedGroupIds: number[] = [];
+  public _groupActionLoadingId: number | null = null;
+  public _taskDeleteLoadingId: string | null = null;
+  public _groupToEdit: TaskGroup | null = null;
 
-  constructor(private tasksService: TasksService) {
-    this.tasksService.getTasks().subscribe({
-      next: (taskGroups) => {
-        this.taskGroups = taskGroups;
-      },
-      error: (response) => {
-        console.log(response.error);
-      }
+  constructor(private route: ActivatedRoute, private tasksService: TasksService, private router: Router) {
+
+    this.tasksService.taskGroups$
+      .pipe(tap(taskGroups => { this.taskGroups = taskGroups; }))
+      .subscribe();
+
+    this.tasksService.getTasks().subscribe();
+
+    this.route.params.subscribe(params => {
+      console.log(params);
+      
     });
   }
 
@@ -40,5 +59,43 @@ export class TasksMenuComponent {
     } else {
       this.expandedGroupIds = this.expandedGroupIds.filter((id) => id !== group.id);
     }
+  }
+
+  public _onGroupActionsClick(event: Event): void {
+    event.stopPropagation();
+  }
+
+  public _deleteGroup(group: TaskGroup): void {
+    this._groupActionLoadingId = group.id;
+
+    this.tasksService.deleteGroup(group.id)
+      .pipe(tap(() => { this._groupActionLoadingId = null; }))
+      .subscribe();
+  }
+
+  public _enableGroupRenaming(group: TaskGroup): void {
+    this._groupToEdit = group;
+  }
+
+  public _finishRenaming(): void {
+    this._groupToEdit = null;
+  }
+
+  public _createTask(group: TaskGroup): void {
+    this.router.navigate(['/create-task'], { queryParams: { groupId: group.id, groupName: group.name } });
+  }
+
+  public _deleteTask(event: Event, task: TaskBrief): void {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    this._taskDeleteLoadingId = task.id;
+
+    this.tasksService.deleteTask(task.id).subscribe({
+      next: () => {
+        this._taskDeleteLoadingId = null;
+        this.router.navigate(['']);
+      }
+    })
   }
 }

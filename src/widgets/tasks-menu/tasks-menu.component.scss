@@ -1,45 +1,61 @@
-.tasks-menu {
-    --mat-expansion-header-expanded-state-height: 48px;
-    // --mat-expansion-header-collapsed-state-height: 48px;
-    --mdc-list-list-item-label-text-size: 14px;
-    --mdc-list-list-item-one-line-container-height: 36px;
+@use '../../shared/assets/styles/colors.scss';
 
+.tasks-menu {
     height: 100%;
     overflow-y: auto;
-    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.task-group {
+    height: 48px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    transition: background-color .3s;
+    cursor: pointer;
+
+    &:hover, &._expanded {
+        background-color: rgba(0 0 0 / .04);
+    }
+
+    // &:hover &__toolbar {
+    //     visibility: visible;
+    // }
 
     &__title {
-        height: 24px;
-    }
+        flex: 1;
 
-    &__panel {
-        box-shadow: none !important;
-
-        .mat-expansion-panel-header {
-            padding: 0 24px 0 12px;
-        }
-    }
-
-    &__list {
-        padding: 0;
-    }
-
-    &__group {
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        font-weight: 600;
+        font-size: 16px;
     }
 
     &__chevron {
-        transform: rotate(0);
-        transition: transform 0.25s;
+        transform: rotate(-90deg);
+        transition: transform .3s;
 
         &._expanded {
-            transform: rotate(90deg);
+            transform: rotate(0);
         }
     }
 
-    .mat-expansion-indicator {
-        height: 24px !important;
+    // &__toolbar {
+    //     visibility: hidden;
+    // }
+}
+
+.task-item {
+    &[aria-checked=true] {
+        background-color: rgba(0 0 0 / .04);
+    }
+
+    &:hover &__button {
+        display: inline-flex;
+    }
+
+    &__button {
+        display: none;
     }
 }

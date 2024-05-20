@@ -1,6 +1,5 @@
 <div class="login">
-    <mat-card class="login__card">
-        <mat-card-content>
+    <tui-island>
             <div class="login__header">
                 <img src="../../shared/assets/logo.svg" alt="Main Logo">
     
@@ -18,59 +17,63 @@
 
                 @if (!isRegister) {
                     <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-                        <mat-form-field class="login__input" appearance="fill">
-                            <mat-label>Email</mat-label>
+                        <tui-input class="login__control" formControlName="email">
+                            Электронная почта
 
-                            <input matInput formControlName="email" type="email" placeholder="Введите ваш email" required>
-                            <mat-error>Пожалуйста, введите валидную почту</mat-error>
-                        </mat-form-field>
+                            <input tuiTextfield type="email" />
+                        </tui-input>
 
-                        <mat-form-field class="login__input" appearance="fill">
-                            <mat-label>Пароль</mat-label>
-
-                            <input matInput formControlName="password" type="password" placeholder="Введите ваш пароль" required>
-                            <mat-error>Это поле должно быть заполнено</mat-error>
-                        </mat-form-field>
+                        <tui-input-password class="login__control" formControlName="password" tuiTextfieldSize="s">
+                            Ваш пароль
+                            <input
+                                placeholder="Make it secure!"
+                                tuiTextfield
+                            />
+                        </tui-input-password>
     
                         <div class="login__footer">
-                            <button type="submit" mat-raised-button color="primary">Войти</button>
-    
-                            <button type="button" mat-button color="secondary" (click)="register()">Регистрация</button>
+                            <button type="submit" [disabled]="!loginForm.valid" tuiButton>
+                                Войти
+                            </button>
+
+                            <button type="button" tuiButton appearance="secondary" (click)="register()">
+                                Регистрация
+                            </button>
                         </div>
                     </form>
                 }
 
                 @if (isRegister) {
                     <form class="login__form" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
-                        <mat-form-field class="login__input" appearance="fill">
-                            <mat-label>Email</mat-label>
+                        <tui-input class="login__control" formControlName="email">
+                            Электронная почта
 
-                            <input matInput formControlName="email" type="email" placeholder="Введите ваш email" required>
-                            <mat-error>Пожалуйста, введите валидную почту</mat-error>
-                        </mat-form-field>
+                            <input tuiTextfield type="email" />
+                        </tui-input>
 
-                        <mat-form-field class="login__input" appearance="fill">
-                            <mat-label>ФИО</mat-label>
+                        <tui-input class="login__control" formControlName="name">
+                            ФИО
 
-                            <input matInput formControlName="name" placeholder="Введите ваши ФИО" required>
-                            <mat-error>Это поле должно быть заполнено</mat-error>
-                        </mat-form-field>
+                            <input tuiTextfield />
+                        </tui-input>
 
-                        <mat-form-field class="login__input" appearance="fill">
-                            <mat-label>Пароль</mat-label>
+                        <tui-input-password class="login__control" formControlName="password" tuiTextfieldSize="s">
+                            Ваш пароль
 
-                            <input matInput formControlName="password" type="password" placeholder="Введите ваш пароль" required>
-                            <mat-error>Это поле должно быть заполнено</mat-error>
-                        </mat-form-field>
+                            <input placeholder="Make it secure!" tuiTextfield/>
+                        </tui-input-password>
     
                         <div class="login__footer">
-                            <button type="submit" mat-raised-button color="primary">Зарегистрироваться</button>
-    
-                            <button type="button" mat-button color="secondary" (click)="login()">Авторизоваться</button>
+                            <button type="submit" [disabled]="!registerForm.valid" tuiButton>
+                                Зарегистрироваться
+                            </button>
+
+                            <button type="button" tuiButton appearance="secondary" (click)="login()">
+                                Авторизация
+                            </button>
                         </div>
                     </form>
                 }
             </div>
-        </mat-card-content>
-    </mat-card>
+    </tui-island>
 </div>

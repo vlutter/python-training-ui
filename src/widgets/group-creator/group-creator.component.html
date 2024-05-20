@@ -1,0 +1,51 @@
+<div class="group-creator" [class._edit]="!!group">
+    @if (!_inputEnabled && !group) {
+        <button
+            appearance="outline"
+            tuiButton type="button"
+            size="s"
+            (click)="_onAddGroupClick()"
+        >
+            Add Group
+        </button>
+    }
+
+    @if (_inputEnabled || group) {
+        <form class="group-creator__form" [formGroup]="groupForm" (ngSubmit)="_onCreateGroup()">
+            <tui-input
+                class="group-creator__input"
+                formControlName="name" 
+                tuiTextfieldSize="s"
+                tuiMode="onLight"
+            >
+                Название группы задач
+
+                <input tuiTextfield (click)="$event.stopPropagation()" />
+            </tui-input>
+
+            <tui-loader
+                class="loader"
+                [inheritColor]="true"
+                [overlay]="true"
+                [showLoader]="_loading"
+            >
+                <button
+                    icon="tuiIconCheckLarge"
+                    tuiIconButton
+                    type="submit"
+                    size="s"
+                    (click)="$event.stopPropagation()"
+                ></button>
+            </tui-loader>
+
+            <button
+                icon="tuiIconCloseLarge"
+                tuiIconButton
+                type="button"
+                appearance="secondary"
+                size="s"
+                (click)="_onCancel($event)"
+            ></button>
+        </form>
+    }
+</div>

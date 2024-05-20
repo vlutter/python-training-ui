@@ -1,0 +1,19 @@
+.group-creator {
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+
+    &._edit {
+        padding: 0;
+    }
+
+    &__form {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+
+    &__input {
+        flex: 1;
+    }
+}

@@ -1,21 +1,95 @@
 <div class="tasks-menu">
-    <mat-accordion class="tasks-menu__accordion" displayMode="flat" multi>
-        @for (group of taskGroups; track group.id) {
-            <mat-expansion-panel class="tasks-menu__panel" hideToggle (expandedChange)="_onExpandedChange($event, group)">
-                <mat-expansion-panel-header>
-                    <div class="tasks-menu__group">
-                        <mat-icon class="tasks-menu__chevron" [class._expanded]="expandedGroupIds.includes(group.id)" aria-hidden="false" aria-label="Chevron" fontIcon="chevron_right"></mat-icon>
+    @for (group of taskGroups; track group.id) {
+        <div
+            class="tasks-menu__group task-group"
+            [class._expanded]="expandedGroupIds.includes(group.id)"
+            (click)="_onExpandedChange(!expandedGroupIds.includes(group.id), group)"
+        >
+            <tui-svg 
+                class="task-group__chevron"
+                [class._expanded]="expandedGroupIds.includes(group.id)"
+                src="tuiIconChevronDown"
+            ></tui-svg>
 
-                        {{group.name}}
-                    </div>
-                </mat-expansion-panel-header>
-          
-                <mat-nav-list class="tasks-menu__list">
-                  @for (task of group.tasks; track task.id) {
-                    <a class="tasks-menu__item" mat-list-item href="/">{{ task.name }}</a>
-                  }
-                </mat-nav-list>
-            </mat-expansion-panel>
-        }
-    </mat-accordion>
+            <div class="task-group__title">
+                @if (group.id === _groupToEdit?.id) {
+                    <group-creator [group]="group" (finish)="_finishRenaming()"></group-creator>
+                } @else {
+                    {{group.name}}
+                }
+            </div>
+
+            <div class="task-group__toolbar">
+                <tui-hosted-dropdown tuiDropdownHover [content]="dropdownContent" tuiDropdownAlign="right">
+                    <tui-loader
+                        class="loader"
+                        [inheritColor]="true"
+                        [overlay]="true"
+                        [showLoader]="_groupActionLoadingId === group.id"
+                    >
+                        <button
+                            icon="tuiIconMoreVertical"
+                            appearance="flat"
+                            tuiIconButton
+                            type="button"
+                            size="s"
+                            (click)="_onGroupActionsClick($event)"
+                        >
+                            flat
+                        </button>
+                    </tui-loader>
+                </tui-hosted-dropdown>
+
+                <ng-template #dropdownContent>
+                    <tui-data-list role="menu">
+                        <a role="menuitemradio" tuiOption (click)="_createTask(group)">Создать Задачу</a>
+
+                        <a role="menuitemradio" tuiOption (click)="_enableGroupRenaming(group)">Переименовать</a>
+
+                        <a role="menuitemradio" tuiOption (click)="_deleteGroup(group)">Удалить</a>
+                    </tui-data-list>
+                </ng-template>
+            </div>
+        </div>
+        <tui-expand [expanded]="expandedGroupIds.includes(group.id)">
+            <ng-template tuiExpandContent>
+                <tui-data-list role="menu">
+                    @for (task of group.tasks; track task.id) {
+                        <a
+                            class="tasks-menu__item task-item"
+                            #rla="routerLinkActive"
+                            role="menuitemradio"
+                            [routerLink]="[task.id]"
+                            routerLinkActive="active"
+                            tuiOption
+                            [attr.aria-checked]="rla.isActive"
+                        >
+                            <span>{{ task.name }}</span>
+                            
+                            <tui-loader
+                                class="loader task-item__button"
+                                [inheritColor]="true"
+                                [overlay]="true"
+                                [showLoader]="_taskDeleteLoadingId === task.id"
+                            >
+                                <button
+                                    icon="tuiIconTrash2"
+                                    appearance="flat"
+                                    tuiIconButton
+                                    type="button"
+                                    size="s"
+                                    (click)="_deleteTask($event, task)"
+                                >
+                                    flat
+                                </button>
+                            </tui-loader>
+                        </a>
+                    }
+                    
+                </tui-data-list>
+            </ng-template>
+        </tui-expand>
+    }
+
+    <group-creator></group-creator>
 </div>

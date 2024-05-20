@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { TasksService } from '@services/tasks.service';
+import { TuiLoaderModule } from '@taiga-ui/core';
 
 
 @Component({
   selector: 'loading-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule],
+  imports: [TuiLoaderModule],
   templateUrl: './loading-page.component.html',
   styleUrl: './loading-page.component.scss'
 })
@@ -21,7 +21,7 @@ export class LoadingPageComponent {
       if (taskGroups.length && taskGroups[0].tasks.length) {
         console.log(taskGroups[0].tasks.length);
         
-        this.router.navigate([`/${taskGroups[0].tasks[0].id}`]);
+        this.router.navigate([taskGroups[0].tasks[0].id]);
       }
     });
   }

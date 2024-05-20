@@ -1,19 +1,33 @@
 @if (userInfo) {
-    <div class="user-toolbar" [matMenuTriggerFor]="menu">
-        <div class="user-toolbar__info">
-            <div class="user-toolbar__name">{{userInfo.name}}</div>
-            
-            <div class="user-toolbar__email">{{userInfo.email}}</div>
+    <tui-hosted-dropdown [content]="dropdownContent" tuiDropdownAlign="right">
+        <div class="user-toolbar">
+            <div class="user-toolbar__info">
+                <div class="user-toolbar__name">{{userInfo.name}}</div>
+                
+                <div class="user-toolbar__email">{{userInfo.email}}</div>
+            </div>
+    
+            <gravatar [email]="userInfo.email"></gravatar>
         </div>
-
-        <gravatar [email]="userInfo.email"></gravatar>
-    </div>
-
-    <mat-menu #menu="matMenu" xPosition="before">
-        <button mat-menu-item (click)="logout()">Выйти из аккаунта</button>
-    </mat-menu>
+    </tui-hosted-dropdown>
 }
 
 @if (!userInfo) {
-    <button mat-raised-button (click)="logout()">Выйти из аккаунта</button>
+    <button
+        tuiButton
+        type="button"
+        appearance="secondary"
+        size="s"
+        (click)="logout($event)"
+    >
+        Выйти из аккаунта
+    </button>
 }
+
+
+    
+<ng-template #dropdownContent>
+    <tui-data-list role="menu">
+        <a role="menuitemradio" tuiOption (click)="logout($event)">Выйти из аккаунта</a>
+    </tui-data-list>
+</ng-template>

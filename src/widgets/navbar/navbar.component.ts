@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { GravatarComponent } from '@components/gravatar/gravatar.component';
@@ -13,7 +10,7 @@ import { LogoComponent } from "@components/logo/logo.component";
     standalone: true,
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss',
-    imports: [MatToolbarModule, MatIconModule, MatButtonModule, GravatarComponent, UserToolbarComponent, LogoComponent]
+    imports: [GravatarComponent, UserToolbarComponent, LogoComponent]
 })
 export class NavbarComponent  implements OnInit {
   public loggedIn = false;

@@ -1,0 +1,87 @@
+<form class="create-task-page" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <div class="create-task-page__content create-task-content">
+        <div class="create-task-content__inner">
+            <h3>Раздел: {{groupName}}</h3>
+    
+            <h1>{{editMode ? 'Редактировать' : 'Создать'}} задачу</h1>
+    
+            <tui-input class="create-task-content__control" formControlName="id">
+                Идентификатор задачи (пример: <em>task_name</em>)
+                <input tuiTextfield />  
+            </tui-input>
+    
+            <tui-input class="create-task-content__control" formControlName="name">
+                Название задачи
+                <input tuiTextfield />
+            </tui-input>
+    
+            <div class="create-task-content__control create-task-content__editor editor">
+                <ngx-editor-menu placeholder="Описание задачи" [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+                <div class="editor__divider"></div>
+                <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+    
+                <input type="text" formControlName="description" style="display: none" />
+            </div>
+    
+            <div class="create-task-content__control create-task-content__tests create-task-tests" formArrayName="tests">
+                <h3>Тесты</h3>
+    
+                @for (test of tests.controls; let i = $index; track i) {
+                    <div class="create-task-tests__row" [formGroupName]="i">
+                        <tui-textarea
+                            formControlName="input_data"
+                            class="create-task-tests__input"
+                            [expandable]="true"
+                        >
+                            Входные данные
+                        </tui-textarea>
+    
+                        <tui-textarea
+                            formControlName="output_data"
+                            class="create-task-tests__input"
+                            [expandable]="true"
+                        >
+                            Ожидаемый результат
+                        </tui-textarea>
+    
+                        <button
+                            icon="tuiIconTrash2Large"
+                            appearance="flat"
+                            tuiIconButton
+                            type="button"
+                            (click)="removeField(i)"
+                        >
+                            flat
+                        </button>
+                    </div>
+                }
+                <button
+                    class="create-task-tests__add"
+                    appearance="secondary"
+                    icon="tuiIconPlus"
+                    type="button"
+                    tuiButton
+                    size="m"
+                    (click)="addField()"
+                >
+                    Добавить тест
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="create-task-page__footer create-task-footer">
+        <div class="create-task-footer__inner">
+            <tui-loader
+                class="loader"
+                [inheritColor]="true"
+                [overlay]="true"
+                [showLoader]="loading"
+            >
+                <button type="submit" [disabled]="!taskForm.valid" tuiButton size="m">
+                    {{editMode ? 'Редактировать' : 'Создать'}}
+                </button>
+            </tui-loader>
+        </div>
+    </div>
+</form>

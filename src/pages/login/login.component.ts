@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
+import { TuiInputModule, TuiInputPasswordModule, TuiIslandModule } from '@taiga-ui/kit';
+import { TuiButtonModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [MatCardModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
+  imports: [TuiIslandModule, TuiInputModule, TuiInputPasswordModule, TuiButtonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -17,6 +16,7 @@ export class LoginComponent {
   public loginForm: FormGroup;
   public registerForm: FormGroup;
   public errorMessage?: string;
+  public valid = false;
   public isRegister = false;
 
   constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
@@ -28,6 +28,7 @@ export class LoginComponent {
     this.loginForm.valueChanges.subscribe({
       next: () => {
         this.errorMessage = undefined;
+        this.valid = this.loginForm.valid;
       }
     })
 
@@ -40,6 +41,7 @@ export class LoginComponent {
     this.registerForm.valueChanges.subscribe({
       next: () => {
         this.errorMessage = undefined;
+        this.valid = this.registerForm.valid;
       }
     })
   }
