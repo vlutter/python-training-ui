@@ -28,7 +28,6 @@ export class GravatarComponent implements OnChanges {
   }
 
   private loadImage(hash: string) {
-    console.log(hash);
     this.http.get<Blob>(`https://gravatar.com/avatar/${hash}?d=monsterid`, { responseType: 'blob' as 'json' }).subscribe({
       next: (response) => {
         const urlCreator = window.URL || window.webkitURL;

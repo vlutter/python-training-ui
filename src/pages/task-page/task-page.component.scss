@@ -17,15 +17,26 @@
         }
     }
 
-    &__title {
+    &__header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 8px;
+    }
+
+    &__name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
     
     &__divider {
         border-bottom: 2px solid colors.$gray;
         margin: 24px 0;
+    }
+
+    &__tabs {
+        margin-bottom: 12px;
     }
 }
 

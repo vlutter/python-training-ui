@@ -4,13 +4,14 @@ import { AuthService } from '@services/auth.service';
 import { UserInfoService } from '@services/user.service';
 import { User } from '@models/user.model';
 import { TuiButtonModule, TuiDataListModule, TuiHostedDropdownModule } from '@taiga-ui/core';
+import { UserProfileComponent } from '@components/user-profile/user-profile.component';
 
 @Component({
     selector: 'user-toolbar',
     standalone: true,
     templateUrl: './user-toolbar.component.html',
     styleUrl: './user-toolbar.component.scss',
-    imports: [GravatarComponent, TuiButtonModule, TuiDataListModule, TuiHostedDropdownModule]
+    imports: [UserProfileComponent, TuiButtonModule, TuiDataListModule, TuiHostedDropdownModule]
 })
 export class UserToolbarComponent implements OnInit {
   public userInfo: User | null = null;

@@ -1,0 +1,27 @@
+<tui-accordion class="task-solutions" [closeOthers]="false">
+    @for (solution of _taskSolutions; track solution.user_id) {
+        <tui-accordion-item>
+            <div class="task-solutions__header">
+                <user-profile [leftOrientation]="true" [name]="solution.name" [email]="solution.email"></user-profile>
+
+                <tui-badge
+                    [status]="_getStatusBadgeConfig(solution.status).status"
+                    [value]="_getStatusBadgeConfig(solution.status).text"
+                >
+                    @if (_getStatusBadgeConfig(solution.status).icon) {
+                        <tui-svg [src]="_getStatusBadgeConfig(solution.status).icon"></tui-svg>
+                    }
+                </tui-badge>
+            </div>
+
+            <ng-template tuiAccordionItemContent>
+                <task-solution
+                    [id]="solution.user_id.toString()"
+                    [status]="solution.status"
+                    [output]="solution.output"
+                    [solution]="solution.solution"
+                ></task-solution>
+            </ng-template>
+        </tui-accordion-item>
+    }
+</tui-accordion>

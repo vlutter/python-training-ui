@@ -7,7 +7,7 @@ import { TasksService } from '@services/tasks.service';
 import { TuiButtonModule, TuiLoaderModule } from '@taiga-ui/core';
 import { TuiInputModule, TuiTextareaModule } from '@taiga-ui/kit';
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
-import { tap } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'create-task-page',
@@ -74,7 +74,7 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
             tests: []
           })
       
-          task.tests.forEach(test => this.tests.push(this.fb.group(test)));
+          task.tests.forEach((test) => this.tests.push(this.fb.group({ ...test, index: uuid() })));
 
           this.tasksService.getGroupById(task.group_id).subscribe({
             next: (taskGroup) => {
@@ -98,6 +98,7 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
 
   public createField(): FormGroup {
     return this.fb.group({
+      index: [uuid(), Validators.required],
       input_data: ['', Validators.required],
       output_data: ['', Validators.required]
     });
@@ -107,8 +108,9 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
     this.tests.push(this.createField());
   }
 
-  public removeField(index: number): void {
-    this.tests.removeAt(index);
+  public removeField(deletedControl: any): void {
+  
+    this.tests.removeAt(this.tests.controls.findIndex(control => control === deletedControl))
   }
 
   public onSubmit() {
@@ -126,7 +128,8 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
       }).subscribe({
         next: () => {
           this.loading = false;
-          this.router.navigate([this.task?.id])
+
+          this.router.navigate(['task', this.task?.id])
         }
       })
 
@@ -142,7 +145,8 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
     }).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate([this.taskForm.value.id])
+        
+        this.router.navigate(['task', this.taskForm.value.id])
       }
     })
   }

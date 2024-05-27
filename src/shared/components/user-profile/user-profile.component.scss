@@ -1,0 +1,36 @@
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    &._left {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+
+        .user-profile__info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    &__name {
+        color: white;
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 500;
+    }
+
+    &__email {
+        color: white;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 300;
+    }
+}

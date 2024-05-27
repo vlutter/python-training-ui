@@ -1,0 +1,25 @@
+@use '../../shared/assets/styles/colors.scss';
+
+.users-menu {
+    height: 100%;
+    overflow-y: auto;
+    margin-top: 12px;
+
+    ::ng-deep .user-profile__name, ::ng-deep .user-profile__email {
+        color: black;
+    }
+}
+
+.user-item {
+    &[aria-checked=true] {
+        background-color: rgba(0 0 0 / .04);
+    }
+
+    &:hover &__button {
+        display: inline-flex;
+    }
+
+    &__button {
+        display: none;
+    }
+}

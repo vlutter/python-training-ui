@@ -1,0 +1,18 @@
+<div class="users-menu">
+    <tui-data-list role="menu">
+        @for (user of users; track user.id) {
+            <a
+                class="users-menu__item user-item"
+                #rla="routerLinkActive"
+                role="menuitemradio"
+                [routerLink]="['user', user.id]"
+                routerLinkActive="active"
+                tuiOption
+                [attr.aria-checked]="rla.isActive"
+            >
+                <user-profile [name]="user.name" [email]="user.email" [leftOrientation]="true"></user-profile>
+            </a>
+        }
+        
+    </tui-data-list>
+</div>

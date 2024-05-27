@@ -1,0 +1,9 @@
+<div class="user-profile" [class._left]="leftOrientation">
+    <div class="user-profile__info">
+        <div class="user-profile__name">{{name}}</div>
+        
+        <div class="user-profile__email">{{email}}</div>
+    </div>
+
+    <gravatar [email]="email"></gravatar>
+</div>

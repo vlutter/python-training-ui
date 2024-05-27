@@ -26,8 +26,8 @@
             <div class="create-task-content__control create-task-content__tests create-task-tests" formArrayName="tests">
                 <h3>Тесты</h3>
     
-                @for (test of tests.controls; let i = $index; track i) {
-                    <div class="create-task-tests__row" [formGroupName]="i">
+                @for (test of tests.controls; track test.value.index) {
+                    <div class="create-task-tests__row" [formGroupName]="test.value.index">
                         <tui-textarea
                             formControlName="input_data"
                             class="create-task-tests__input"
@@ -49,7 +49,7 @@
                             appearance="flat"
                             tuiIconButton
                             type="button"
-                            (click)="removeField(i)"
+                            (click)="removeField(test)"
                         >
                             flat
                         </button>

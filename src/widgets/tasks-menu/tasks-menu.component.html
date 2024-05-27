@@ -12,44 +12,54 @@
             ></tui-svg>
 
             <div class="task-group__title">
-                @if (group.id === _groupToEdit?.id) {
+                @if (_isAdmin && group.id === _groupToEdit?.id) {
                     <group-creator [group]="group" (finish)="_finishRenaming()"></group-creator>
                 } @else {
                     {{group.name}}
+
+                    @if (group?.status && group.status !== 'not_started') {
+                        <tui-badge
+                            [status]="_getStatusBadgeConfig(group?.status).status"
+                        >
+                            <tui-svg [src]="_getStatusBadgeConfig(group?.status).icon"></tui-svg>
+                        </tui-badge>
+                    }
                 }
             </div>
 
-            <div class="task-group__toolbar">
-                <tui-hosted-dropdown tuiDropdownHover [content]="dropdownContent" tuiDropdownAlign="right">
-                    <tui-loader
-                        class="loader"
-                        [inheritColor]="true"
-                        [overlay]="true"
-                        [showLoader]="_groupActionLoadingId === group.id"
-                    >
-                        <button
-                            icon="tuiIconMoreVertical"
-                            appearance="flat"
-                            tuiIconButton
-                            type="button"
-                            size="s"
-                            (click)="_onGroupActionsClick($event)"
+            @if (_isAdmin) {
+                <div class="task-group__toolbar">
+                    <tui-hosted-dropdown tuiDropdownHover [content]="dropdownContent" tuiDropdownAlign="right">
+                        <tui-loader
+                            class="loader"
+                            [inheritColor]="true"
+                            [overlay]="true"
+                            [showLoader]="_groupActionLoadingId === group.id"
                         >
-                            flat
-                        </button>
-                    </tui-loader>
-                </tui-hosted-dropdown>
-
-                <ng-template #dropdownContent>
-                    <tui-data-list role="menu">
-                        <a role="menuitemradio" tuiOption (click)="_createTask(group)">Создать Задачу</a>
-
-                        <a role="menuitemradio" tuiOption (click)="_enableGroupRenaming(group)">Переименовать</a>
-
-                        <a role="menuitemradio" tuiOption (click)="_deleteGroup(group)">Удалить</a>
-                    </tui-data-list>
-                </ng-template>
-            </div>
+                            <button
+                                icon="tuiIconMoreVertical"
+                                appearance="flat"
+                                tuiIconButton
+                                type="button"
+                                size="s"
+                                (click)="_onGroupActionsClick($event)"
+                            >
+                                flat
+                            </button>
+                        </tui-loader>
+                    </tui-hosted-dropdown>
+    
+                    <ng-template #dropdownContent>
+                        <tui-data-list role="menu">
+                            <a role="menuitemradio" tuiOption (click)="_createTask(group)">Создать Задачу</a>
+    
+                            <a role="menuitemradio" tuiOption (click)="_enableGroupRenaming(group)">Переименовать</a>
+    
+                            <a role="menuitemradio" tuiOption (click)="_deleteGroup(group)">Удалить</a>
+                        </tui-data-list>
+                    </ng-template>
+                </div>
+            }
         </div>
         <tui-expand [expanded]="expandedGroupIds.includes(group.id)">
             <ng-template tuiExpandContent>
@@ -59,30 +69,42 @@
                             class="tasks-menu__item task-item"
                             #rla="routerLinkActive"
                             role="menuitemradio"
-                            [routerLink]="[task.id]"
+                            [routerLink]="['task', task.id]"
                             routerLinkActive="active"
                             tuiOption
                             [attr.aria-checked]="rla.isActive"
                         >
-                            <span>{{ task.name }}</span>
+                            <span>
+                                {{ task.name }}
+
+                                @if (task?.status && task.status !== 'not_started') {
+                                    <tui-badge
+                                        [status]="_getStatusBadgeConfig(task?.status).status"
+                                    >
+                                        <tui-svg [src]="_getStatusBadgeConfig(task?.status).icon"></tui-svg>
+                                    </tui-badge>
+                                }
+                            </span>
                             
-                            <tui-loader
-                                class="loader task-item__button"
-                                [inheritColor]="true"
-                                [overlay]="true"
-                                [showLoader]="_taskDeleteLoadingId === task.id"
-                            >
-                                <button
-                                    icon="tuiIconTrash2"
-                                    appearance="flat"
-                                    tuiIconButton
-                                    type="button"
-                                    size="s"
-                                    (click)="_deleteTask($event, task)"
+                            @if (_isAdmin) {
+                                <tui-loader
+                                    class="loader task-item__button"
+                                    [inheritColor]="true"
+                                    [overlay]="true"
+                                    [showLoader]="_taskDeleteLoadingId === task.id"
                                 >
-                                    flat
-                                </button>
-                            </tui-loader>
+                                    <button
+                                        icon="tuiIconTrash2"
+                                        appearance="flat"
+                                        tuiIconButton
+                                        type="button"
+                                        size="s"
+                                        (click)="_deleteTask($event, task)"
+                                    >
+                                        flat
+                                    </button>
+                                </tui-loader>
+                            }
                         </a>
                     }
                     
@@ -91,5 +113,7 @@
         </tui-expand>
     }
 
-    <group-creator></group-creator>
+    @if (_isAdmin) {
+        <group-creator></group-creator>
+    }
 </div>

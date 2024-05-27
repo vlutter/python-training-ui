@@ -3,7 +3,21 @@
 
     <div class="main__body">
         <div class="main__menu">
-            <tasks-menu></tasks-menu>
+            @if (_isAdmin) {
+                <tui-tabs class="main__tabs">
+                    <button tuiTab (click)="_onTabClick('tasks')">Задачи</button>
+        
+                    <button tuiTab (click)="_onTabClick('users')">Пользователи</button>
+                </tui-tabs>
+
+                @if (_activeTab === 'tasks') {
+                    <ng-container *ngTemplateOutlet="tasksMenu"></ng-container>
+                } @else {
+                    <ng-container *ngTemplateOutlet="usersMenu"></ng-container>
+                }
+            } @else {
+                <ng-container *ngTemplateOutlet="tasksMenu"></ng-container>
+            }
         </div>
 
         <div class="main__content">
@@ -11,3 +25,11 @@
         </div>
     </div>
 </div>
+
+<ng-template #tasksMenu>
+    <tasks-menu></tasks-menu>
+</ng-template>
+
+<ng-template #usersMenu>
+    <users-menu></users-menu>
+</ng-template>

@@ -16,12 +16,9 @@ export class LoadingPageComponent {
 
   public ngOnInit(): void {
     this.tasksService.taskGroups$.subscribe((taskGroups) => {
-      console.log(taskGroups);
-      
       if (taskGroups.length && taskGroups[0].tasks.length) {
-        console.log(taskGroups[0].tasks.length);
         
-        this.router.navigate([taskGroups[0].tasks[0].id]);
+        this.router.navigate(['task', taskGroups[0].tasks[0].id]);
       }
     });
   }

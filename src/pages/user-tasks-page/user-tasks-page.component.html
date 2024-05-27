@@ -1,0 +1,104 @@
+<div class="user-tasks-page">
+    <div class="user-tasks-page__inner">
+        <div class="user-tasks-page__header">
+            <user-profile [name]="_userInfo?.name" [email]="_userInfo?.email" [leftOrientation]="true"></user-profile>
+
+            <div class="user-tasks-page__total-progress total-progress">
+                <div class="total-progress__card">
+                    <div class="total-progress__label">Разделы</div>
+
+                    <label tuiProgressLabel>
+                        <div class="total-progress__number _top">{{solvedGroupsCount}}</div>
+                        <div class="total-progress__number _bottom">{{totalGroupsCount}}</div>
+
+                        <tui-progress-circle
+                            class="user-tasks-page__progress"
+                            [class._done]="solvedGroupsCount === totalGroupsCount"
+                            size="l"
+                            [max]="totalGroupsCount"
+                            [value]="solvedGroupsCount"
+                        ></tui-progress-circle>
+                    </label>
+                </div>
+
+                <div class="total-progress__card">
+                    <div class="total-progress__label">Задачи</div>
+
+                    <label tuiProgressLabel>
+                        <div class="total-progress__number _top">{{solvedTasksCount}}</div>
+                        <div class="total-progress__number _bottom">{{totalTasksCount}}</div>
+
+                        <tui-progress-circle
+                            class="user-tasks-page__progress"
+                            [class._done]="solvedTasksCount === totalTasksCount"
+                            size="l"
+                            [max]="totalTasksCount"
+                            [value]="solvedTasksCount"
+                        ></tui-progress-circle>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <tui-loader
+            class="loader"
+            [inheritColor]="true"
+            [overlay]="true"
+            [showLoader]="_groupsLoading"
+        >
+            <tui-accordion>
+                @for (group of _groups; track group.id) {
+                    <tui-accordion-item>
+                        <div class="user-tasks-page__title">
+                            {{group.name}}
+
+                            <label tuiProgressLabel>
+                                {{_getSolvedTasksInGroupCount(group)}}/{{group.tasks.length}}
+
+                                <tui-progress-circle
+                                    class="user-tasks-page__progress"
+                                    [class._done]="group.status === 'done' && _getSolvedTasksInGroupCount(group) === group.tasks.length"
+                                    size="m"
+                                    [max]="group.tasks.length"
+                                    [value]="_getSolvedTasksInGroupCount(group)"
+                                ></tui-progress-circle>
+                            </label>
+                        </div>
+                        
+
+                        <ng-template tuiAccordionItemContent>
+                            <tui-accordion>
+                                @for (task of group.tasks; track task.id) {
+                                    <tui-accordion-item>
+                                        <div class="user-tasks-page__title">
+                                            {{task.name}}
+
+                                            <tui-badge
+                                                [status]="_getStatusBadgeConfig(task.status).status"
+                                                [value]="_getStatusBadgeConfig(task.status).text"
+                                            >
+                                                @if (_getStatusBadgeConfig(task.status).icon) {
+                                                    <tui-svg [src]="_getStatusBadgeConfig(task.status).icon"></tui-svg>
+                                                }
+                                            </tui-badge>
+                                        </div>
+
+                                        <ng-template tuiAccordionItemContent>
+                                            <task-solution
+                                                [id]="task.id.toString()"
+                                                [status]="task.status"
+                                                [output]="task.output"
+                                                [solution]="task.solution"
+                                            ></task-solution>
+                                        </ng-template>
+                                    </tui-accordion-item>
+                                }
+                            </tui-accordion>
+                        </ng-template>
+                    </tui-accordion-item>
+                }
+            </tui-accordion>
+        </tui-loader>
+        
+    </div>
+</div>

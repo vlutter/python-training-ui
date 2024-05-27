@@ -1,0 +1,15 @@
+.task-solutions {
+    ::ng-deep .user-profile__name, ::ng-deep .user-profile__email {
+        color: black;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    &__output {
+        white-space: break-spaces;
+    }
+}

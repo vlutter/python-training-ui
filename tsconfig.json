@@ -30,6 +30,7 @@
       "@constants/*": ["src/shared/constants/*"],
       "@models/*": ["src/shared/models/*"],
       "@services/*": ["src/shared/services/*"],
+      "@helpers/*": ["src/shared/helpers/*"],
     }
   },
   "angularCompilerOptions": {

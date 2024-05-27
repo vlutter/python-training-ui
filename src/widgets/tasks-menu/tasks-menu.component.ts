@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { TaskBrief, TaskGroup } from '@models/task.model';
+import { TaskBrief, TaskGroup, TaskStatus } from '@models/task.model';
 import { TasksService } from '@services/tasks.service';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GroupCreatorComponent } from '@widgets/group-creator/group-creator.component';
 import { TuiButtonModule, TuiDataListModule, TuiDropdownModule, TuiExpandModule, TuiHostedDropdownModule, TuiLoaderModule, TuiSvgModule } from '@taiga-ui/core';
-import { tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
+import { StatusBadgeConfig, getBadgeByStatus } from '@helpers/badge.helpers';
+import { TuiBadgeModule } from '@taiga-ui/kit';
+import { UserInfoService } from '@services/user.service';
+import { UserRole } from '@models/user.model';
 
 
 @Component({
@@ -22,7 +26,8 @@ import { tap } from 'rxjs';
     CommonModule,
     RouterLink,
     RouterLinkActive,
-    GroupCreatorComponent
+    GroupCreatorComponent,
+    TuiBadgeModule
   ],
   templateUrl: './tasks-menu.component.html',
   styleUrl: './tasks-menu.component.scss'
@@ -38,19 +43,41 @@ export class TasksMenuComponent {
   public _groupActionLoadingId: number | null = null;
   public _taskDeleteLoadingId: string | null = null;
   public _groupToEdit: TaskGroup | null = null;
+  private openedTaskId?: string;
+  public _isAdmin = false;
 
-  constructor(private route: ActivatedRoute, private tasksService: TasksService, private router: Router) {
-
+  constructor(private route: ActivatedRoute, private tasksService: TasksService, private router: Router, private userInfoService: UserInfoService) {
     this.tasksService.taskGroups$
-      .pipe(tap(taskGroups => { this.taskGroups = taskGroups; }))
+      .pipe(tap(taskGroups => { 
+        this.taskGroups = taskGroups;
+
+        const activeGroup = this.taskGroups.find(group => group.tasks.some(task => task.id === this.openedTaskId));
+            
+        if (activeGroup && !this.expandedGroupIds.includes(activeGroup.id)) {
+          this.expandedGroupIds.push(activeGroup.id);
+        }
+        
+      }))
       .subscribe();
+
+      this.userInfoService.userInfo$
+        .pipe(tap(userInfo => { this._isAdmin = userInfo?.role == UserRole.Admin; }))
+        .subscribe();
 
     this.tasksService.getTasks().subscribe();
 
-    this.route.params.subscribe(params => {
-      console.log(params);
-      
-    });
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const childRoute = this.route.firstChild;
+        if (childRoute) {
+          childRoute.params.subscribe(params => {
+            if (!params['taskId']) return;
+
+            this.openedTaskId = params['taskId'];
+          });
+        }
+      });
   }
 
   public _onExpandedChange(expanded: boolean, group: TaskGroup): void {
@@ -97,5 +124,9 @@ export class TasksMenuComponent {
         this.router.navigate(['']);
       }
     })
+  }
+
+  public _getStatusBadgeConfig(status?: TaskStatus): StatusBadgeConfig {
+    return getBadgeByStatus(status);
   }
 }

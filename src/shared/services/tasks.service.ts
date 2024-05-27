@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
 import { API_URL } from '@constants/api.constants';
-import { Task, TaskGroup } from '@models/task.model';
+import { Task, TaskGroup, TaskGroupWithSolutions } from '@models/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,36 @@ export class TasksService {
   private taskGroupsSubject = new BehaviorSubject<TaskGroup[]>([]);
   public taskGroups$ = this.taskGroupsSubject.asObservable();
 
+  private userTaskGroupsSubject = new BehaviorSubject<TaskGroupWithSolutions[]>([]);
+  public userTaskGroups$ = this.userTaskGroupsSubject.asObservable();
+
   constructor(private http: HttpClient) {}
+
+  public setTask(newTask: Task): void {
+    this.taskGroupsSubject.next(this.taskGroupsSubject.value.map(group => {
+      if (!group.tasks.some(task => task.id === newTask.id)) return group;
+
+      group.tasks = group.tasks.map(task => task.id === newTask.id ? newTask : task)
+
+      return group;
+    }));
+  }
+
+  getTasksByUser(userId: number): Observable<TaskGroupWithSolutions[]> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    });
+
+    return this.http.get<TaskGroup[]>(`${API_URL}/tasks/user/${userId}`, { headers }).pipe(
+      tap(taskGroups => {
+        this.userTaskGroupsSubject.next(taskGroups);
+      }),
+      catchError(error => {
+        console.error('Error fetching user tasks:', error);
+        throw error;
+      })
+    );
+  }
 
   getTasks(): Observable<TaskGroup[]> {
     const headers = new HttpHeaders({

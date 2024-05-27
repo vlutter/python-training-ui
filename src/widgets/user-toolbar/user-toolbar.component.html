@@ -1,14 +1,6 @@
 @if (userInfo) {
     <tui-hosted-dropdown [content]="dropdownContent" tuiDropdownAlign="right">
-        <div class="user-toolbar">
-            <div class="user-toolbar__info">
-                <div class="user-toolbar__name">{{userInfo.name}}</div>
-                
-                <div class="user-toolbar__email">{{userInfo.email}}</div>
-            </div>
-    
-            <gravatar [email]="userInfo.email"></gravatar>
-        </div>
+        <user-profile [name]="userInfo.name" [email]="userInfo.email"></user-profile>
     </tui-hosted-dropdown>
 }
 

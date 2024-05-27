@@ -2,19 +2,38 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task, TaskGroup } from '@models/task.model';
+import { StatusBadgeConfig, getBadgeByStatus } from '@helpers/badge.helpers';
+import { Task, TaskGroup, TaskStatus } from '@models/task.model';
+import { UserRole } from '@models/user.model';
 import { CodeEditorModule, CodeModel } from '@ngstack/code-editor';
 import { TaskService } from '@services/task.service';
 import { TasksService } from '@services/tasks.service';
-import { TuiButtonModule, TuiLoaderModule, TuiNotificationModule } from '@taiga-ui/core';
-import { TuiTextareaModule } from '@taiga-ui/kit';
+import { UserInfoService } from '@services/user.service';
+import { TuiButtonModule, TuiLoaderModule, TuiNotificationModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiBadgeModule, TuiTabsModule, TuiTextareaModule } from '@taiga-ui/kit';
+import { tap } from 'rxjs';
+import { DCATaskPageTab } from './task-page.model';
+import { NgTemplateOutlet } from '@angular/common';
+import { TaskSolutionsComponent } from "@widgets/task-solutions/task-solutions.component";
 
 @Component({
-  selector: 'task-page',
-  standalone: true,
-  imports: [ReactiveFormsModule, TuiButtonModule, TuiTextareaModule, TuiLoaderModule, CodeEditorModule, TuiNotificationModule],
-  templateUrl: './task-page.component.html',
-  styleUrl: './task-page.component.scss'
+    selector: 'task-page',
+    standalone: true,
+    templateUrl: './task-page.component.html',
+    styleUrl: './task-page.component.scss',
+    imports: [
+        NgTemplateOutlet,
+        ReactiveFormsModule,
+        TuiButtonModule,
+        TuiTextareaModule,
+        TuiLoaderModule,
+        CodeEditorModule,
+        TuiNotificationModule,
+        TuiBadgeModule,
+        TuiSvgModule,
+        TuiTabsModule,
+        TaskSolutionsComponent
+    ]
 })
 export class TaskPageComponent {
   public dataForm: FormGroup;
@@ -29,6 +48,9 @@ export class TaskPageComponent {
   public solved = false;
   public runLoading = false;
   public testLoading = false;
+  public statusBadgeConfig?: StatusBadgeConfig;
+  public _isAdmin = false;
+  public _activeTab: DCATaskPageTab = 'condition';
 
   public model: CodeModel = {
     language: 'python',
@@ -49,27 +71,51 @@ export class TaskPageComponent {
     private router: Router,
     private taskService: TaskService,
     private tasksService: TasksService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private userInfoService: UserInfoService
   ) {
     this.dataForm = this.formBuilder.group({
       inputData: ['']
     });
 
     this.route.params.subscribe(params => {
-      this.taskService.getTask(params['taskId']).subscribe({
-        next: (task) => {
-          this.task = task;
-
-          this.descriptionHtml = this.sanitizer.bypassSecurityTrustHtml(task.description);
-
-          this.tasksService.getGroupById(task.group_id).subscribe({
-            next: (taskGroup) => {
-              this.taskGroup = taskGroup;
-            }
-          })
-        }
-      })
+      this.taskService.getTask(params['taskId']).subscribe()
     });
+
+    this.taskService.task$.subscribe({
+      next: (task) => {
+        if (!task) return;
+
+        this.task = task;
+        this.statusBadgeConfig = getBadgeByStatus(task?.status);
+
+        if (task?.last_solution) {
+          this.model = {
+            ...this.model,
+            value: task.last_solution
+          };
+        } else {
+          this.model = {
+            ...this.model,
+            value: '# Ваш код'
+          };
+        }
+
+        this.descriptionHtml = this.sanitizer.bypassSecurityTrustHtml(task.description);
+
+        this.tasksService.getGroupById(task.group_id).subscribe({
+          next: (taskGroup) => {
+            this.taskGroup = taskGroup;
+          }
+        })
+      }
+    })
+
+
+
+    this.userInfoService.userInfo$
+      .pipe(tap(userInfo => { this._isAdmin = userInfo?.role == UserRole.Admin; }))
+      .subscribe();
   }
 
   public _editTask(taskId: string): void {
@@ -81,19 +127,24 @@ export class TaskPageComponent {
   }
 
   public _runCode(): void {
+    if (!this.task) return;
+
     this.solved = false;
     this.result = undefined;
 
     this.runLoading = true;
-    this.taskService.runCode(this.code, this.dataForm.value.inputData).subscribe({
+    this.taskService.runCode(this.code, this.dataForm.value.inputData, this.task.id).subscribe({
       next: ({ output_data }) => {
-        console.log(output_data);
         this.result = output_data;
         this.runLoading = false;
+
+        this.updateTasks();
       },
       error: (err: any) => {
         this.error = err.error.error;
         this.runLoading = false;
+
+        this.updateTasks();
       }
     })
   }
@@ -110,6 +161,8 @@ export class TaskPageComponent {
         this.result = "Задача решена!";
         this.solved = true;
         this.testLoading = false;
+
+        this.updateTasks();
       },
       error: (err: any) => {
         this.error = err.error.error;
@@ -118,7 +171,30 @@ export class TaskPageComponent {
           this.error = this.error + '\n' + JSON.stringify(err.error.data);
         }
         this.testLoading = false;
+
+        this.updateTasks();
       }
     })
+  }
+
+  public _onTabClick(tab: DCATaskPageTab) {
+    this._activeTab = tab;
+  }
+
+  private updateStatus(status: TaskStatus, code: string): void {
+    if (!this.task) return;
+
+    this.taskService.setTask({
+      ...this.task,
+      status: status,
+      last_solution: code
+    });
+  }
+
+  private updateTasks(): void {
+    if (!this.task) return;
+
+    this.tasksService.getTasks().subscribe();
+    this.taskService.getTask(this.task.id).subscribe()
   }
 }
