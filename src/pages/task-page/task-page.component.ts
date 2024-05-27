@@ -79,6 +79,9 @@ export class TaskPageComponent {
     });
 
     this.route.params.subscribe(params => {
+      this.solved = false;
+      this.result = undefined;
+      this.error = undefined;
       this.taskService.getTask(params['taskId']).subscribe()
     });
 
@@ -179,16 +182,6 @@ export class TaskPageComponent {
 
   public _onTabClick(tab: DCATaskPageTab) {
     this._activeTab = tab;
-  }
-
-  private updateStatus(status: TaskStatus, code: string): void {
-    if (!this.task) return;
-
-    this.taskService.setTask({
-      ...this.task,
-      status: status,
-      last_solution: code
-    });
   }
 
   private updateTasks(): void {

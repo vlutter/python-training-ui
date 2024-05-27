@@ -21,8 +21,6 @@ export class AuthService {
       'Content-Type': 'application/json',
       'Authorization': 'Basic ' + btoa(username + ':' + password)
     });
-
-    console.log(username, password);
     
 
     return this.http.post<any>(`${API_URL}/login`, {}, { headers }).pipe(
