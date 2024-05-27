@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { API_URL } from '../constants/api.constants';
+import { API_URL } from '@constants/api.constants';
+
 
 @Injectable({
   providedIn: 'root'
