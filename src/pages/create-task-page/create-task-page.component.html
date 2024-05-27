@@ -26,8 +26,15 @@
             <div class="create-task-content__control create-task-content__tests create-task-tests" formArrayName="tests">
                 <h3>Тесты</h3>
     
-                @for (test of tests.controls; track test.value.index) {
-                    <div class="create-task-tests__row" [formGroupName]="test.value.index">
+                @for (test of tests.controls; let i = $index; track test.value.index;) {
+                    <div class="create-task-tests__row" [formGroupName]="i">
+                        <tui-textarea
+                            style="display: none"
+                            formControlName="index"
+                            class="create-task-tests__input"
+                            [expandable]="true"
+                        ></tui-textarea>
+
                         <tui-textarea
                             formControlName="input_data"
                             class="create-task-tests__input"
