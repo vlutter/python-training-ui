@@ -6,7 +6,7 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
-import { CodeEditorModule } from "@ngstack/code-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     importProvidersFrom(TuiRootModule),
-    importProvidersFrom(CodeEditorModule.forRoot())
+    importProvidersFrom(MonacoEditorModule.forRoot())
   ]
 };

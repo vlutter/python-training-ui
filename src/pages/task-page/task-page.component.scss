@@ -51,13 +51,17 @@
         margin-bottom: 8px;
     }
 
-    &__editor {
+    &__editor-container {
         height: 400px;
         padding: 10px 0;
         border-radius: var(--tui-radius-m);
         border: 1px solid colors.$border;
         box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
         overflow: hidden;
+    }
+
+    &__editor {
+        height: calc(100vh - 100px);
     }
 
     &__toolbar {

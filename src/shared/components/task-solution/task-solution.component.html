@@ -1,35 +1,31 @@
 @if (status && status !== 'not_started') {
     @if (solution) {
-        <ngs-code-editor
-            [readOnly]="true"
-            style="height: 100%"
-            theme="vs"
-            [codeModel]="{ language: 'python', uri: id + '.py', value: solution }"
-        ></ngs-code-editor>
+        <div class="task-solution__editor-container">
+            <ngx-monaco-editor
+                style="height: 100%"
+                class="task-code__editor"
+                [options]="editorOptions"
+                [ngModel]="solution"
+            ></ngx-monaco-editor>
+        </div>
     }
 
     @if (output || status === 'done') {
         @if (status === 'done') {
             <tui-notification status='success' size="m">
-                <div class="task-solutions__output">
-                    Задача решена!
-                </div>
+                Задача решена!
             </tui-notification>
         } @else if (output?.output_data) {
             <tui-notification status="info" icon="" size="m">
-                <div class="task-code__output">
-                    {{output?.output_data}}
-                </div>
+                {{output?.output_data}}
             </tui-notification>
         } @else if (output?.error) {
             <tui-notification status="error" icon="" size="m">
-                <div class="task-code__output">
-                    {{output?.error}}
+                {{output?.error}}
 
-                    @if (output?.data) {
-                        {{_stringify(output?.data)}}
-                    }
-                </div>
+                @if (output?.data) {
+                    {{_stringify(output?.data)}}
+                }
             </tui-notification>
         }
     }

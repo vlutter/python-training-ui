@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBadgeConfig, getBadgeByStatus } from '@helpers/badge.helpers';
-import { Task, TaskGroup, TaskStatus } from '@models/task.model';
+import { Task, TaskGroup } from '@models/task.model';
 import { UserRole } from '@models/user.model';
-import { CodeEditorModule, CodeModel } from '@ngstack/code-editor';
 import { TaskService } from '@services/task.service';
 import { TasksService } from '@services/tasks.service';
 import { UserInfoService } from '@services/user.service';
@@ -15,6 +14,7 @@ import { tap } from 'rxjs';
 import { DCATaskPageTab } from './task-page.model';
 import { NgTemplateOutlet } from '@angular/common';
 import { TaskSolutionsComponent } from "@widgets/task-solutions/task-solutions.component";
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 @Component({
     selector: 'task-page',
@@ -22,12 +22,13 @@ import { TaskSolutionsComponent } from "@widgets/task-solutions/task-solutions.c
     templateUrl: './task-page.component.html',
     styleUrl: './task-page.component.scss',
     imports: [
+        FormsModule,
         NgTemplateOutlet,
         ReactiveFormsModule,
         TuiButtonModule,
         TuiTextareaModule,
         TuiLoaderModule,
-        CodeEditorModule,
+        MonacoEditorModule,
         TuiNotificationModule,
         TuiBadgeModule,
         TuiSvgModule,
@@ -52,18 +53,7 @@ export class TaskPageComponent {
   public _isAdmin = false;
   public _activeTab: DCATaskPageTab = 'condition';
 
-  public model: CodeModel = {
-    language: 'python',
-    uri: 'main.py',
-    value: this.code
-  };
-
-  public options = {
-    contextmenu: true,
-    minimap: {
-      enabled: true
-    }
-  };
+  public editorOptions = {theme: 'vs', language: 'python'};
 
   constructor(
     private formBuilder: FormBuilder,
@@ -93,15 +83,9 @@ export class TaskPageComponent {
         this.statusBadgeConfig = getBadgeByStatus(task?.status);
 
         if (task?.last_solution) {
-          this.model = {
-            ...this.model,
-            value: task.last_solution
-          };
+          this.code = task.last_solution;
         } else {
-          this.model = {
-            ...this.model,
-            value: '# Ваш код'
-          };
+          this.code = '# Ваш код';
         }
 
         this.descriptionHtml = this.sanitizer.bypassSecurityTrustHtml(task.description);
@@ -123,10 +107,6 @@ export class TaskPageComponent {
 
   public _editTask(taskId: string): void {
     this.router.navigate([`edit-task/${taskId}`, { data: 'hellp' }])
-  }
-
-  public _onCodeChanged(value: string): void {
-    this.code = value;
   }
 
   public _runCode(): void {

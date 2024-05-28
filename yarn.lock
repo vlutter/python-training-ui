@@ -1648,13 +1648,6 @@
   dependencies:
     tslib "^2.2.0"
 
-"@ngstack/code-editor@^7.2.0":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@ngstack/code-editor/-/code-editor-7.2.0.tgz#4404e3805b9442d1b11deb75f8eccee0ad5e2488"
-  integrity sha512-z//yN5o3O9CLwvb68cP4TxBlrBvm9CqBeRWKHDl72lJnwabT/4s9vGtU4C3/b0VXF9KoWPouTgypbVPnCkBTrg==
-  dependencies:
-    tslib "^2.5.0"
-
 "@ngtools/webpack@17.3.6":
   version "17.3.6"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-17.3.6.tgz#f00834aecd6f15d5900784037777c05f32945087"
@@ -4813,6 +4806,11 @@ mkdirp@^3.0.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-3.0.1.tgz#e44e4c5607fb279c168241713cc6e0fea9adcb50"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
 
+monaco-editor@^0.49.0:
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.49.0.tgz#4e80e9859feb2c421def3cef194d12d822606472"
+  integrity sha512-2I8/T3X/hLxB2oPHgqcNYUVdA/ZEFShT7IAujifIPMfKkNbLOqY8XCoyHCXrsdjb36dW9MwoTwBCFpXKMwNwaQ==
+
 mrmime@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/mrmime/-/mrmime-2.0.0.tgz#151082a6e06e59a9a39b46b3e14d5cfe92b3abb4"
@@ -4908,6 +4906,13 @@ ngx-editor@^17.5.4:
     prosemirror-state "^1.4.3"
     prosemirror-view "^1.33.6"
     tslib "^2.3.0"
+
+ngx-monaco-editor@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-monaco-editor/-/ngx-monaco-editor-12.0.0.tgz#060b46d764df68319826e3664358cf1529c5ca11"
+  integrity sha512-/HXTILVwWvrk4OkT1p88nb+PGEqlecQot2VMTdSLbVW7A24fNZpDAF6tNR4Bp3V/abZjShDK8LfsqLePA0tPmw==
+  dependencies:
+    tslib "^2.1.0"
 
 nice-napi@^1.0.2:
   version "1.0.2"
@@ -6412,7 +6417,7 @@ ts-morph@21.0.1:
     "@ts-morph/common" "~0.22.0"
     code-block-writer "^12.0.0"
 
-tslib@2.6.2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@^2.5.0, tslib@^2.6.2:
+tslib@2.6.2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==

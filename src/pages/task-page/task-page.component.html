@@ -55,15 +55,14 @@
     <h2>Решение:</h2>
 
     <div class="task-page__code task-code">
-        <div class="task-code__editor">
+        <div class="task-code__editor-container">
             <div style="height: 100%">
-                <ngs-code-editor
+                <ngx-monaco-editor
                     style="height: 100%"
-                    [theme]="theme"
-                    [codeModel]="model"
-                    [options]="options"
-                    (valueChanged)="_onCodeChanged($event)"
-                ></ngs-code-editor>
+                    class="task-code__editor"
+                    [options]="editorOptions"
+                    [(ngModel)]="code"
+                ></ngx-monaco-editor>
             </div>
         </div>
 
