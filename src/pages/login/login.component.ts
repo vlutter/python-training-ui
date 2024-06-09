@@ -54,6 +54,7 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: () => {
+        console.info('Navigate to ', ``)
         this.router.navigate(['/']);
       },
       error: (response) => {

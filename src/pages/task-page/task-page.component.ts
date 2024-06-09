@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBadgeConfig, getBadgeByStatus } from '@helpers/badge.helpers';
-import { Task, TaskGroup } from '@models/task.model';
+import { Task, TaskGroup, TaskStatus } from '@models/task.model';
 import { UserRole } from '@models/user.model';
 import { TaskService } from '@services/task.service';
 import { TasksService } from '@services/tasks.service';
@@ -106,6 +106,7 @@ export class TaskPageComponent {
   }
 
   public _editTask(taskId: string): void {
+    console.info('Navigate to ', `edit-task/${taskId}`)
     this.router.navigate([`edit-task/${taskId}`, { data: 'hellp' }])
   }
 
@@ -121,13 +122,13 @@ export class TaskPageComponent {
         this.result = output_data;
         this.runLoading = false;
 
-        this.updateTasks();
+        this.updateTask(this.code, TaskStatus.InProgress);
       },
       error: (err: any) => {
         this.error = err.error.error;
         this.runLoading = false;
 
-        this.updateTasks();
+        this.updateTask(this.code, TaskStatus.InProgress);
       }
     })
   }
@@ -145,7 +146,7 @@ export class TaskPageComponent {
         this.solved = true;
         this.testLoading = false;
 
-        this.updateTasks();
+        this.updateTask(this.code, TaskStatus.Done);
       },
       error: (err: any) => {
         this.error = err.error.error;
@@ -155,7 +156,7 @@ export class TaskPageComponent {
         }
         this.testLoading = false;
 
-        this.updateTasks();
+        this.updateTask(this.code, TaskStatus.InProgress);
       }
     })
   }
@@ -164,10 +165,13 @@ export class TaskPageComponent {
     this._activeTab = tab;
   }
 
-  private updateTasks(): void {
+  private updateTask(code: string, status: TaskStatus): void {
     if (!this.task) return;
 
-    this.tasksService.getTasks().subscribe();
-    this.taskService.getTask(this.task.id).subscribe()
+    this.taskService.setTask({
+      ...this.task,
+      last_solution: code,
+      status: status
+    })
   }
 }

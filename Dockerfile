@@ -4,26 +4,23 @@ FROM node:20-alpine as build
 # Установим рабочую директорию
 WORKDIR /app
 
-# Скопируем package.json и package-lock.json
-COPY package*.json ./
+# Скопируем package.json и yarn.lock
+COPY package.json yarn.lock ./
 
 # Установим зависимости
-RUN npm install
+RUN yarn install
 
 # Скопируем все файлы проекта
 COPY . .
 
 # Соберем проект
-RUN npm run build
+RUN yarn build
 
 # Используем nginx для сервировки статических файлов
 FROM nginx:alpine
 
 # Копируем файлы сборки из предыдущего контейнера
 COPY --from=build /app/dist/python-training-ui/browser /usr/share/nginx/html
-
-# Скопируем конфигурацию nginx
-# COPY nginx.conf /etc/nginx/nginx.conf
 
 # Откроем порт 80
 EXPOSE 80

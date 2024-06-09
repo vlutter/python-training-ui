@@ -109,6 +109,7 @@ export class TasksMenuComponent {
   }
 
   public _createTask(group: TaskGroup): void {
+    console.info('Navigate to ', '/create-task')
     this.router.navigate(['/create-task'], { queryParams: { groupId: group.id, groupName: group.name } });
   }
 
@@ -121,6 +122,7 @@ export class TasksMenuComponent {
     this.tasksService.deleteTask(task.id).subscribe({
       next: () => {
         this._taskDeleteLoadingId = null;
+        console.info('Navigate to ', '')
         this.router.navigate(['']);
       }
     })

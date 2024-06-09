@@ -21,6 +21,7 @@ export class NavbarComponent  implements OnInit {
     this.authService.loggedIn$.subscribe((loggedIn) => {
       this.loggedIn = loggedIn;
       if (!loggedIn) {
+        console.info('Navigate to ', '/login')
         this.router.navigate(['/login']);
       }
     });

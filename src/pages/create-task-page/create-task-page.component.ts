@@ -129,6 +129,7 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
         next: () => {
           this.loading = false;
 
+          console.info('Navigate to ', `task/${this.task?.id}`)
           this.router.navigate(['task', this.task?.id])
         }
       })
@@ -146,6 +147,8 @@ export class CreateTaskPageComponent implements OnDestroy, OnInit {
       next: () => {
         this.loading = false;
         
+
+        console.info('Navigate to ', `task/${this.taskForm.value.id}`)
         this.router.navigate(['task', this.taskForm.value.id])
       }
     })

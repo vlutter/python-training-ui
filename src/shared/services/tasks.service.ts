@@ -128,7 +128,14 @@ export class TasksService {
 
     return this.http.post<any>(`${API_URL}/tasks`, task, { headers }).pipe(
       tap(() => {
-        this.getTasks().subscribe();
+        this.taskGroupsSubject.next(this.taskGroupsSubject.getValue().map((group) => {
+          if (group.id !== task.group_id) return group;
+
+          return {
+            ...group,
+            tasks: [...group.tasks, task]
+          };
+        }));
       }),
       catchError(error => {
         console.error('Error creating task:', error);
@@ -144,7 +151,14 @@ export class TasksService {
 
     return this.http.put<any>(`${API_URL}/tasks/${task.id}`, task, { headers }).pipe(
       tap(() => {
-        this.getTasks().subscribe();
+        this.taskGroupsSubject.next(this.taskGroupsSubject.getValue().map((group) => {
+          if (group.id !== task.group_id) return group;
+
+          return {
+            ...group,
+            tasks: group.tasks.map((currentTask) => currentTask.id === task.id ? task : currentTask)
+          };
+        }));
       }),
       catchError(error => {
         console.error('Error editing task:', error);

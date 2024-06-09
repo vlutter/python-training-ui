@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TasksService } from '@services/tasks.service';
 import { TuiLoaderModule } from '@taiga-ui/core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -11,15 +12,20 @@ import { TuiLoaderModule } from '@taiga-ui/core';
   templateUrl: './loading-page.component.html',
   styleUrl: './loading-page.component.scss'
 })
-export class LoadingPageComponent {
-  constructor(private router: Router, private tasksService: TasksService) {}
+export class LoadingPageComponent implements OnDestroy {
+  private tasksSubscription: Subscription;
 
-  public ngOnInit(): void {
-    this.tasksService.taskGroups$.subscribe((taskGroups) => {
+  constructor(private router: Router, private tasksService: TasksService) {
+    this.tasksSubscription = this.tasksService.taskGroups$.subscribe((taskGroups) => {
       if (taskGroups.length && taskGroups[0].tasks.length) {
-        
+
+        console.info('Navigate to ', `task/${taskGroups[0].tasks[0].id}`)
         this.router.navigate(['task', taskGroups[0].tasks[0].id]);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.tasksSubscription.unsubscribe();
   }
 }
